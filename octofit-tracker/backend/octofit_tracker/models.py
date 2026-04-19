@@ -1,11 +1,14 @@
 from djongo import models
+from bson import ObjectId
+from djongo.models import ObjectIdField
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
+    id = ObjectIdField(primary_key=True, default=ObjectId, editable=False)
     # Additional fields can be added here
-    pass
 
 class Team(models.Model):
+    id = ObjectIdField(primary_key=True, default=ObjectId, editable=False)
     name = models.CharField(max_length=100, unique=True)
     members = models.ManyToManyField('User', related_name='teams')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -14,6 +17,7 @@ class Team(models.Model):
         return self.name
 
 class Activity(models.Model):
+    id = ObjectIdField(primary_key=True, default=ObjectId, editable=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='activities')
     activity_type = models.CharField(max_length=100)
     duration = models.PositiveIntegerField(help_text='Duration in minutes')
@@ -22,12 +26,14 @@ class Activity(models.Model):
     team = models.ForeignKey('Team', on_delete=models.SET_NULL, null=True, blank=True, related_name='activities')
 
 class Workout(models.Model):
+    id = ObjectIdField(primary_key=True, default=ObjectId, editable=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='workouts')
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     date = models.DateField()
 
 class LeaderboardEntry(models.Model):
+    id = ObjectIdField(primary_key=True, default=ObjectId, editable=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     team = models.ForeignKey('Team', on_delete=models.CASCADE, null=True, blank=True)
     score = models.IntegerField()
